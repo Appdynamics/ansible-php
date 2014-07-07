@@ -1,0 +1,24 @@
+{
+    "name": "ansible-php",
+    "type": "library",
+    "description": "Helper library for Ansible modules written in PHP",
+    "keywords": ["ansible", "library"],
+    "homepage": "https://github.com/Appdynamics/ansible-php",
+    "authors": [
+        {
+            "name": "Andrew Udvare",
+            "email": "audvare@gmail.com",
+            "homepage": "http://andrew.udvare.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-0": { "AnsiblePhp\\": "src" }
+    },
+    "minimum-stability": "dev",
+    "config": {
+        "bin-dir": "dev"
+    }
+}
