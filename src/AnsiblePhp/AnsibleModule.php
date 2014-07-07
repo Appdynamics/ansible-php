@@ -43,7 +43,7 @@ class AnsibleModule
 
         foreach ($argumentSpec as $key => $spec) {
             if (!is_array($spec)) {
-                $this->failJson(array('msg' => sprintf('Argument keyword "%s" is not an array', $key)));
+                throw new InvalidArgumentException('Argument keyword "%s" is not an array', $key);
             }
         }
 
@@ -55,10 +55,10 @@ class AnsibleModule
 
             // Validate arguments
             if (!$key || !isset($key) || !isset($val)) {
-                $this->failJson(array('msg' => sprintf('Argument at index %d is invalid', $i)));
+                throw new InvalidArgumentException('Argument at index %d is invalid', $i);
             }
             if (!isset($argumentSpec[$key])) {
-                $this->failJson(sprintf('Argument "%s" is invalid', $key));
+                throw new InvalidArgumentexception('Argument "%s" is invalid', $key);
             }
 
             // Validate and 'casting' of types
@@ -168,7 +168,8 @@ class AnsibleModule
     }
 
     /**
-     * Used to check JSON state consistantly. Exits with 1 if JSON fails to be encoded.
+     * Used to check JSON state consistantly. Exits with 1 if JSON fails to be
+     *   encoded.
      */
     protected function checkJsonState()
     {
