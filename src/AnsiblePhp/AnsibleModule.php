@@ -51,7 +51,7 @@ class AnsibleModule
         $args = preg_split('/\s+/', file_get_contents($argFile), null, PREG_SPLIT_NO_EMPTY);
 
         foreach ($args as $i => $arg) {
-            @list($key, $val) = preg_split('/=/', $arg, 2);
+            list($key, $val) = preg_split('/=/', $arg, 2);
 
             // Validate arguments
             if (!$key || !isset($key) || !isset($val)) {
