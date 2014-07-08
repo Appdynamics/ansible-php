@@ -42,6 +42,8 @@ class AnsibleModule
         $yesNo = array('yes', 'no', 'true', 'false');
         $yes = array('yes', 'true');
 
+        $argumentSpec['ansible_php'] = array('type' => 'directory', 'required' => true);
+
         foreach ($argumentSpec as $key => $spec) {
             if (!is_array($spec)) {
                 throw new InvalidArgumentException('Argument keyword "%s" is not an array', $key);
