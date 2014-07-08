@@ -18,6 +18,7 @@ class AnsibleModule
         'integer',
         'list',
         'number',
+        'string',
         'uri',
         'url',
     );
@@ -63,7 +64,7 @@ class AnsibleModule
 
             // Validate and 'casting' of types
             $spec = $argumentSpec[$key];
-            $type = $spec['type'];
+            $type = isset($spec['type']) ? $spec['type'] : 'string';
 
             if (!in_array($type, static::$validArgumentTypes)) {
                 throw new TypeException('%s is not a valid argument type', $spec['type']);
