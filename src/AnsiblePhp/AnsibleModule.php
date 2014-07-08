@@ -58,7 +58,7 @@ class AnsibleModule
                 throw new InvalidArgumentException('Argument at index %d is invalid', $i);
             }
             if (!isset($argumentSpec[$key])) {
-                throw new InvalidArgumentexception('Argument "%s" is invalid', $key);
+                throw new InvalidArgumentException('Argument "%s" is invalid', $key);
             }
 
             // Validate and 'casting' of types
