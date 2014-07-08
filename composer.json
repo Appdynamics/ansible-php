@@ -15,7 +15,12 @@
         "php": ">=5.3.3"
     },
     "autoload": {
-        "psr-0": { "AnsiblePhp\\": "src" }
+        "psr-0": {
+            "AnsiblePhp\\": "src"
+        },
+        "files": [
+            "src/error-handler.php"
+        ]
     },
     "minimum-stability": "dev",
     "config": {
