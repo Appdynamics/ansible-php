@@ -201,12 +201,13 @@ class AnsibleModule
     /**
      * Helper to decode JSON. Checks for errors.
      *
-     * @param string $str String to decode.
+     * @param string  $str   String to decode.
+     * @param boolean $assoc Decode to associative array.
      *
      * @return mixed PHP value.
      */
-    public function decodeJson($str) {
-        $ret = json_decode($str);
+    public function decodeJson($str, $assoc = true) {
+        $ret = json_decode($str, $assoc);
 
         $this->checkJsonState();
 
