@@ -131,6 +131,10 @@ class AnsibleModule
             if (isset($spec['default']) && !isset($this->params[$key])) {
                 $this->params[$key] = $spec['default'];
             }
+            // TODO Move to top
+            if (isset($spec['required']) && $spec['required'] && !isset($this->params[$key])) {
+                throw new ValidationException('Argument %s is required', $key);
+            }
         }
 
         //$this->checkRequiredTogether();
