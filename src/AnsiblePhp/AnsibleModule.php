@@ -83,8 +83,8 @@ class AnsibleModule
             if ($type === 'bool' || $type === 'boolean') {
                 $strVal = strtolower(trim($val));
 
-                if (in_array($val, $yesNo, true)) {
-                    if (in_array($val, $yes, true)) {
+                if (in_array($strVal, $yesNo, true)) {
+                    if (in_array($strVal, $yes, true)) {
                         $val = true;
                     }
                     else {
