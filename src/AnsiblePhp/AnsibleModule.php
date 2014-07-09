@@ -12,6 +12,8 @@ class AnsibleModule
      * @var array
      */
     protected static $validArgumentTypes = array(
+        'bool',
+        'boolean',
         'directory',
         'float',
         'int',
