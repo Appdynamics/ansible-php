@@ -91,7 +91,7 @@ class AnsibleModule
                     }
                 }
                 else {
-                    throw new ValidationException('A boolean value should be one of the following values: %s. Got "%s"', join(', ', $yesNo, (string) $val));
+                    throw new ValidationException('A boolean value should be one of the following values: %s. Got "%s"', join(', ', $yesNo), (string) $val);
                 }
             }
 
