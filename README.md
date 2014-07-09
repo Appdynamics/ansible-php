@@ -78,6 +78,7 @@ function main() {
     // If a key is not specified by the task but has a default value, the key will have that value
     if ($module->params['option']) {
         if (!isset($module->params['value'])) {
+            // You must *always* pass at least the msg key to #failJson()
             $module->failJson(['msg' => 'Value ("value" key) must be set when using option']);
         }
 
@@ -119,12 +120,42 @@ main();
 * WordPress plugins are of varying quality and may trigger warnings that will trigger exceptions in your module that may not appear on the site due to PHP settings and WordPress' very relaxed error handler by default. This can be similar (but less so) for Drupal.
 * Regardless of framework, if your own site's code (that you wrote) is triggering errors in your Ansible module you should probably fix that code and preferably *not* send me an issue or pull request for some strange use case.
 
+### Example error output (`#failJson`)
+
+Note that it will not be prettified from Ansible (this is from `ansible-playbook -v`).
+
+```json
+{
+    "msg": "Argument \"random\" is invalid",
+    "line": 72,
+    "bt": [{
+        "file": "\/some-place\/test.php",
+        "line": 22,
+        "function": "__construct",
+        "class": "AnsiblePhp\\AnsibleModule",
+        "type": "->",
+        "args": [{
+            "dir": []
+        }]
+    }],
+    "failed": true
+}
+```
+
 ## Locally testing
 
 Instead of using `ansible` you can do something like the following:
 
 ```bash
-echo 'ansible_php=/anything-for-local working_dir=/something-real key=something value={"dict_key": "value"}' > args
+# Set up a new project that has Ansible PHP
+mkdir bin
+curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
+php bin/composer.phar require appdynamics/ansible-php:dev-develop
+
+# Create the argument file (just like Ansible does). Note the argument ansible_php
+echo 'ansible_php=. working_dir=/something-real key=something value={"dict_key": "value"}' > args
+
+# Run
 php mymodule args ; echo
 ```
 
@@ -149,4 +180,9 @@ Before you can use Ansible-PHP in your own module, you need to send this library
   when: ansible_php_git.changed
 ```
 
-Note: This is to install a barebones version of Ansible-PHP. You may want to consider using `composer require ansible-php:dev` and building your own project so that you can handle all dependencies properly. You can also add Ansible PHP to any existing code base already using Composer and use that path (with `/vendor/ansible-php`) for where Ansible PHP lives.
+Note: This is to install a barebones version of Ansible-PHP. You may want to consider using `composer require appdynamics/ansible-php:dev-develop` and building your own project so that you can handle all dependencies properly. You can also add Ansible PHP to any existing code base already using Composer and use that path (with `/vendor/ansible-php`) for where Ansible PHP lives.
+
+# Contributing
+
+* PSR standards
+* Make a fork, a feature branch off the `develop` branch here (`man git-branch`), and send a pull request
