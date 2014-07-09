@@ -199,6 +199,21 @@ class AnsibleModule
     }
 
     /**
+     * Helper to decode JSON. Checks for errors.
+     *
+     * @param string $str String to decode.
+     *
+     * @return mixed PHP value.
+     */
+    public function decodeJson($str) {
+        $ret = json_decode($str);
+
+        $this->checkJsonState();
+
+        return $ret;
+    }
+
+    /**
      * Used to check JSON state consistantly. Exits with 1 if JSON fails to be
      *   encoded.
      */
