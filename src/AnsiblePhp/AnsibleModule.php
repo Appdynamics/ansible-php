@@ -64,7 +64,7 @@ class AnsibleModule
         }
 
         foreach ($args as $i => $key) {
-            $val = substr($values[$i], 0, -1);
+            $val = $values[$i];
 
             // Validate arguments
             if (!isset($argumentSpec[$key])) {
