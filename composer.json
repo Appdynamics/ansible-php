@@ -1,5 +1,5 @@
 {
-    "name": "ansible-php",
+    "name": "appdynamics/ansible-php",
     "type": "library",
     "description": "Helper library for Ansible modules written in PHP",
     "keywords": ["ansible", "library"],
