@@ -53,15 +53,20 @@ class AnsibleModule
         }
 
         $argFile = $argv[count($argv) - 1];
-        $args = preg_split('/\s+/', file_get_contents($argFile), null, PREG_SPLIT_NO_EMPTY);
+        $argFile = file_get_contents($argFile);
+        $args = array();
+        preg_match_all('/([a-z_\-]+)=/', $argFile, $args);
+        $args = $args[1];
+        $values = preg_split('/([a-z_\-]+)=/', $argFile, null, PREG_SPLIT_NO_EMPTY);
+
+        if (count($args) !== count($values)) {
+            throw new ValidationException('Argument count did not match value count');
+        }
 
         foreach ($args as $i => $arg) {
-            list($key, $val) = preg_split('/=/', $arg, 2);
+            $val = $values[$i];
 
             // Validate arguments
-            if (!$key || !isset($key) || !isset($val)) {
-                throw new InvalidArgumentException('Argument at index %d is invalid', $i);
-            }
             if (!isset($argumentSpec[$key])) {
                 throw new InvalidArgumentException('Argument "%s" is invalid', $key);
             }
