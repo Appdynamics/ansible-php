@@ -35,9 +35,10 @@ class AnsibleModule
     /**
      * Constructor.
      *
-     * @param array $argumentSpec Argument specification. Array of arrays (dictionaries).
+     * @param array   $argumentSpec Argument specification. Array of arrays (dictionaries).
+     * @param boolean $trimStrings  If all string arguments should be trimmed.
      */
-    public function __construct(array $argumentSpec)
+    public function __construct(array $argumentSpec, $trimStrings = true)
     {
         global $argv;
 
@@ -137,6 +138,9 @@ class AnsibleModule
                 }
             }
 
+            if ($type === 'string' && $trimStrings) {
+                $val = trim($val);
+            }
 
             $this->params[$key] = $val;
         }
