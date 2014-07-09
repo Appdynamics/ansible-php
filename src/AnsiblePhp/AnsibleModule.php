@@ -136,7 +136,7 @@ class AnsibleModule
             if (isset($spec['type']) && $spec['type'] === 'list' && !isset($this->params[$key])) {
                 $this->params[$key] = array();
             }
-            else {
+            else if (!isset($this->params[$key])) {
                 $this->params[$key] = null; // Make the key exist, but isset() still fail
             }
             // TODO Move to top
