@@ -63,7 +63,7 @@ class AnsibleModule
             throw new ValidationException('Argument count did not match value count');
         }
 
-        foreach ($args as $i => $arg) {
+        foreach ($args as $i => $key) {
             $val = substr($values[$i], 0, -1);
 
             // Validate arguments
@@ -96,7 +96,7 @@ class AnsibleModule
             }
 
             if ($type === 'directory' && !is_dir($val)) {
-                throw new ValidationException('Directory %s does not exist', $val);
+                throw new ValidationException('Directory %s does not exist (key: %s)', $val, $key);
             }
 
             if ($type === 'float') {
