@@ -133,7 +133,7 @@ class AnsibleModule
             if (isset($spec['default']) && !isset($this->params[$key])) {
                 $this->params[$key] = $spec['default'];
             }
-            if ($spec['type'] === 'list' && !isset($this->params[$key])) {
+            if (isset($spec['type']) && $spec['type'] === 'list' && !isset($this->params[$key])) {
                 $this->params[$key] = array();
             }
             // TODO Move to top
