@@ -136,6 +136,9 @@ class AnsibleModule
             if (isset($spec['type']) && $spec['type'] === 'list' && !isset($this->params[$key])) {
                 $this->params[$key] = array();
             }
+            else {
+                $this->params[$key] = null; // Make the key exist, but isset() still fail
+            }
             // TODO Move to top
             if (isset($spec['required']) && $spec['required'] && !isset($this->params[$key])) {
                 throw new ValidationException('Argument %s is required', $key);
