@@ -2,11 +2,19 @@
 
 ## Use case
 
-Primarily the issue has been that most CLI apps that help to deploy applications can give little insight into what has actually changed. Sometimes it is possible to use `changed_when` and inspect stderr/stdout, but most of the time it is not possible to tell reliably from just that. This is the same with helper CLI applications for website like Drush and WP-CLI.
+Primarily the issue has been that most CLI apps that help to deploy applications can give little insight into what has actually changed. Sometimes it is possible to use `changed_when` and inspect stderr/stdout, but most of the time it is not possible to tell reliably from just that. This is the same with helper CLI applications for websites like Drush and WP-CLI.
+
+## Getting started with Composer
+
+Use the standard `composer require` command:
+
+```bash
+composer require appdynamics/ansible-php:dev-develop
+```
 
 ## Boilerplate
 
-Unfortunately there is not much of a way to get around Ansible's limitations with other languages besides Python. And there probably will never be. Therefore, you need to have this boiler-plate at the top of your module:
+Unfortunately there is not much of a way to get around Ansible's limitations with other languages besides Python. And there probably will never be. Therefore, you need to have this boilerplate at the top of your module:
 
 ```php
 #!/usr/bin/env php
@@ -33,14 +41,12 @@ use AnsiblePhp\AnsibleModule;
 
 ## Example module
 
-The `AnsibleModule` API is similar to Ansible's version in Python but does not yet have everything. The most noticeable change is a switch to `camelCase` (per PSR-2).
-
 Here we are writing a very basic module to hook into WordPress and update an option idempotently (to not make any change if the option is already set to the value requested).
 
 The task will look like this:
 
 ```yaml
-# Variable exists like this:
+# Variable exists like this in YAML:
 # some_key_value: {dict_key: 'value'}
 
 - name: 'Set some_key to [dict_key => value]'
@@ -50,9 +56,9 @@ The task will look like this:
              value={{some_key_value|to_json}}
 ```
 
-Note that:
+Very important:
 
-* You must always pass the `ansible_php` key and it must be a path where this source code lives. This can be any code base that is using Composer and has this Ansible PHP added as a dependency.
+* You must *always* pass the `ansible_php` key and it must be a path where this source code lives. This can be any code base that is using Composer and has this Ansible PHP added as a dependency.
 * Always use the `to_json` filter for non-scalar values.
 
 ```php
@@ -113,6 +119,8 @@ function main() {
 main();
 ```
 
+This file lives in your Ansible playbook's `library` directory or a path you specify for modules in your Ansible configuration or command line. In this case it is named exactly `wordpress`.
+
 ## Notes
 
 * There is an error handler and exception handler that will always act like `fail_json` and print out the exception or error message and a backtrace.
@@ -161,7 +169,7 @@ php mymodule args ; echo
 
 There is an `echo` here only because no newline is printed after the JSON output (which is on purpose).
 
-# Deploying Ansible PHP
+# Deploying Ansible PHP alone
 
 Before you can use Ansible-PHP in your own module, you need to send this library to the machine and then configure it with Composer. These are the tasks:
 
