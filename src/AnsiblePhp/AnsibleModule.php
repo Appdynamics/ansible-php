@@ -80,7 +80,7 @@ class AnsibleModule
             }
 
             if ($type === 'bool' || $type === 'boolean') {
-                $strVal = strtolower($val);
+                $strVal = strtolower(trim($val));
 
                 if (in_array($val, $yesNo, true)) {
                     if (in_array($val, $yes, true)) {
@@ -91,19 +91,23 @@ class AnsibleModule
                     }
                 }
                 else {
-                    throw new ValidationException('A boolean value should be one of the following values: %s', join(', ', $yesNo));
+                    throw new ValidationException('A boolean value should be one of the following values: %s. Got "%s"', join(', ', $yesNo, (string) $val));
                 }
             }
 
-            if ($type === 'directory' && !is_dir($val)) {
-                throw new ValidationException('Directory %s does not exist (key: %s)', $val, $key);
+            if ($type === 'directory') {
+                $val = trim($val);
+                if (!is_dir($val)) {
+                    throw new ValidationException('Directory %s does not exist (key: %s)', $val, $key);
+                }
             }
 
             if ($type === 'float') {
-                $val = (float) $val;
+                $val = (float) trim($val);
             }
 
             if ($type === 'int' || $type === 'integer') {
+                $val = trim($val);
                 if (!is_numeric($val)) {
                     throw new ValidationException('Expected a numberic value to convert to integer');
                 }
@@ -112,6 +116,7 @@ class AnsibleModule
             }
 
             if ($type === 'list') {
+                $val = trim($val);
                 $val = preg_split('/,/', $val, null, PREG_SPLIT_NO_EMPTY);
                 if (!$val) {
                     throw new ValidationException('Expected list but expanding list argument failed');
@@ -119,12 +124,14 @@ class AnsibleModule
             }
 
             if ($type === 'number') {
+                $val = trim($val);
                 if (!is_numeric($val)) {
                     throw new ValidationException('Expected numeric argument for key %s', $key);
                 }
             }
 
             if ($type === 'uri' || $type === 'url') {
+                $val = trim($val);
                 if (!parse_url($val)) {
                     throw new ValidationException('Expected valid URI for key %s', $key);
                 }
