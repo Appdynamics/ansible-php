@@ -6,6 +6,9 @@ filter:
     excluded_paths:
         - bin
         - vendor
+checks:
+    code_rating: true
+    duplication: true
 tools:
     php_code_coverage:
         enabled: true
