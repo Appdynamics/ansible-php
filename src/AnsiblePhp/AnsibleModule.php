@@ -1,11 +1,20 @@
 <?php
 namespace AnsiblePhp;
 
+use Hampel\Json\Json;
+
 /**
  * Ansible module class, based in part on Ansible's own Python module.
  */
 class AnsibleModule
 {
+    /**
+     * Parameters. This is populated after all arguments are validated.
+     *
+     * @var array
+     */
+    public $params = array();
+
     /**
      * Valid argument types that can be used in the spec.
      *
@@ -24,13 +33,6 @@ class AnsibleModule
         'uri',
         'url',
     );
-
-    /**
-     * Parameters. This is populated after all arguments are validated.
-     *
-     * @var array
-     */
-    public $params = array();
 
     /**
      * Constructor.
@@ -58,7 +60,7 @@ class AnsibleModule
         $args = array();
         preg_match_all('/([a-z_\-]+)=/', $argFile, $args);
         $args = $args[1];
-        $values = preg_split('/([a-z_\-]+)=/', $argFile, null, PREG_SPLIT_NO_EMPTY);
+        $values = preg_split('/[a-z_\-]+=/', $argFile, null, PREG_SPLIT_NO_EMPTY);
 
         if (count($args) !== count($values)) {
             throw new ValidationException('Argument count did not match value count');
@@ -92,25 +94,30 @@ class AnsibleModule
                     }
                 }
                 else {
-                    throw new ValidationException('A boolean value should be one of the following values: %s. Got "%s"', join(', ', $yesNo), (string) $val);
+                    throw new ValidationException('A boolean value should be one of the following values: %s. Got "%s"', join(', ', $yesNo), (string) $strVal);
                 }
             }
 
             if ($type === 'directory') {
                 $val = trim($val);
                 if (!is_dir($val)) {
-                    throw new ValidationException('Directory %s does not exist (key: %s)', $val, $key);
+                    throw new ValidationException('Directory "%s" does not exist (key: "%s")', $val, $key);
                 }
             }
 
             if ($type === 'float') {
-                $val = (float) trim($val);
+                $val = trim($val);
+                if (!is_numeric($val)) {
+                    throw new ValidationException('Expected a numberic value to convert to float (key: "%s")', $key);
+                }
+
+                $val = (float) $val;
             }
 
             if ($type === 'int' || $type === 'integer') {
                 $val = trim($val);
                 if (!is_numeric($val)) {
-                    throw new ValidationException('Expected a numberic value to convert to integer');
+                    throw new ValidationException('Expected a numberic value to convert to integer (key: "%s")', $key);
                 }
 
                 $val = (int) $val;
@@ -120,26 +127,34 @@ class AnsibleModule
                 $val = trim($val);
                 $val = preg_split('/,/', $val, null, PREG_SPLIT_NO_EMPTY);
                 if (!$val) {
-                    throw new ValidationException('Expected list but expanding list argument failed');
+                    throw new ValidationException('Expected list but expanding list argument failed (key: "%s")', $key);
                 }
             }
 
             if ($type === 'number') {
                 $val = trim($val);
                 if (!is_numeric($val)) {
-                    throw new ValidationException('Expected numeric argument for key %s', $key);
+                    throw new ValidationException('Expected numeric argument for key "%s"', $key);
                 }
             }
 
             if ($type === 'uri' || $type === 'url') {
                 $val = trim($val);
-                if (!parse_url($val)) {
-                    throw new ValidationException('Expected valid URI for key %s', $key);
+                $parsed = parse_url($val);
+
+                // Even for junk (bytes), at least key path may be returned
+                if (!$parsed || !isset($parsed['scheme']) || !isset($parsed['host'])) {
+                    throw new ValidationException('Expected valid URI for key "%s"', $key);
                 }
             }
 
-            if ($type === 'string' && $trimStrings) {
-                $val = trim($val);
+            if ($type === 'string') {
+                if ($trimStrings) {
+                    $val = trim($val);
+                }
+                else {
+                    $val = substr($val, 0, -1);
+                }
             }
 
             $this->params[$key] = $val;
@@ -157,7 +172,7 @@ class AnsibleModule
             }
             // TODO Move to top
             if (isset($spec['required']) && $spec['required'] && !isset($this->params[$key])) {
-                throw new ValidationException('Argument %s is required', $key);
+                throw new ValidationException('Argument "%s" is required', $key);
             }
         }
 
@@ -173,12 +188,10 @@ class AnsibleModule
     public function exitJson(array $args = array())
     {
         $args['changed'] = isset($args['changed']) ? (bool) $args['changed'] : false;
-        $json = json_encode($args);
-
-        $this->checkJsonState();
+        $json = Json::encode($args);
 
         print $json;
-        exit(0);
+        $this->terminate();
     }
 
     /**
@@ -192,10 +205,8 @@ class AnsibleModule
         $args['failed'] = true;
         $json = json_encode($args);
 
-        $this->checkJsonState();
-
         print $json;
-        exit(1);
+        $this->terminate(1);
     }
 
     /**
@@ -207,22 +218,16 @@ class AnsibleModule
      * @return mixed PHP value.
      */
     public function decodeJson($str, $assoc = true) {
-        $ret = json_decode($str, $assoc);
-
-        $this->checkJsonState();
-
-        return $ret;
+        return Json::decode($str, $assoc);
     }
 
     /**
-     * Used to check JSON state consistantly. Exits with 1 if JSON fails to be
-     *   encoded.
+     * Termination handler (so this class can be mocked).
+     *
+     * @param integer $code Exit status.
      */
-    protected function checkJsonState()
+    protected function terminate($code = 0)
     {
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            print '{"failed":true,"msg":"Failed to encode JSON"}';
-            exit(1);
-        }
+        exit($code);
     }
 }
