@@ -7,8 +7,9 @@ filter:
         - bin
         - vendor
 checks:
-    code_rating: true
-    duplication: true
+    php:
+        code_rating: true
+        duplication: true
 tools:
     php_code_coverage:
         enabled: true
