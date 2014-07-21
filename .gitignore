@@ -30,5 +30,6 @@ ehthumbs.db
 Thumbs.db
 
 bin/composer.phar
+bin/phpunit
 vendor/
 composer.lock
