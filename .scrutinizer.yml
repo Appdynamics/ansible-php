@@ -13,11 +13,7 @@ checks:
 tools:
     php_code_coverage:
         enabled: true
-    php_cpd:
-        enabled: true
-        excluded_dirs:
-            - bin
-            - vendor
+    php_cpd: false
     php_loc:
         enabled: true
         excluded_dirs:
