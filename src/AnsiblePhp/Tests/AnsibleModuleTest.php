@@ -175,7 +175,7 @@ class AnsibleModuleTest extends TestCase
         $this->createArgumentsFile(array(
             'an_arg' => 'my string arg ',
         ));
-        $mod = new AnsibleModule(array(
+        new AnsibleModule(array(
             'an_arg' => array(),
             'another_arg' => array('required' => true),
         ));
