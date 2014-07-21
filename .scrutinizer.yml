@@ -5,6 +5,7 @@ filter:
         - 'src/*'
     excluded_paths:
         - bin
+        - 'src/AnsiblePhp/Tests/*'
         - vendor
 checks:
     php:
