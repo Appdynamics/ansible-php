@@ -1,5 +1,11 @@
 before_commands:
     - "composer install --no-dev --prefer-source"
+filter:
+    paths:
+        - 'src/*'
+    excluded_paths:
+        - bin
+        - vendor
 tools:
     php_code_coverage:
         enabled: true
@@ -15,14 +21,8 @@ tools:
             - vendor
     php_mess_detector:
         enabled: false
-        filter:
-            paths:
-                - 'src/*'
     php_analyzer:
         enabled: true
-        filter:
-            paths:
-                - 'src/*'
     sensiolabs_security_checker: true
 #     php_code_sniffer:
 #         enabled: true
