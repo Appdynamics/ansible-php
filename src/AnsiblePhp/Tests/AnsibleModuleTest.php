@@ -164,6 +164,21 @@ class AnsibleModuleTest extends TestCase
         }
     }
 
+    public function testConstructorTypecasts() {
+        $this->createArgumentsFile(array(
+            'a' => '1',
+            'b' => '2.3',
+        ));
+        $mod = new AnsibleModule(array(
+            'a' => array('type' => 'int'),
+            'b' => array('type' => 'float'),
+        ));
+        $this->assertSame(1, $mod->params['a']);
+        $this->assertInternalType('float', $mod->params['b']);
+        // Unfortunately there is rounding here (which is why isSame() is not used), so never not use float for money (use string)!
+        $this->assertEquals(2.3, $mod->params['b']);
+    }
+
     public function testConstructorStringTrimming()
     {
         $this->createArgumentsFile(array(
