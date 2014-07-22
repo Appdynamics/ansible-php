@@ -24,6 +24,16 @@ class AnsibleModuleTest extends TestCase
     }
 
     /**
+     * @expectedException AnsiblePhp\InvalidArgumentException
+     * @expectedExceptionMessage Argument keyword "an_arg" is not an array
+     */
+    public function testConstructorNonArrayArgumentInSpec()
+    {
+        $this->createArgumentsFile(array('an_arg' => 'some value'));
+        new AnsibleModule(array('an_arg' => null));
+    }
+
+    /**
      * @expectedException AnsiblePhp\ValidationException
      * @expectedExceptionMessage A boolean value should be one of the following values: yes, no, true, false. Got "some value"
      */
