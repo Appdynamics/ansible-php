@@ -18,7 +18,6 @@ abstract class AbstractStringFormatException extends \Exception
      *
      * @see sprintf()
      * @see #setCode()
-     * @see #setPrevious()
      */
     public function __construct($message, $code = 0, $previous = null)
     {
