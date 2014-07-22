@@ -203,7 +203,7 @@ class AnsibleModule
     public function failJson(array $args = array())
     {
         $args['failed'] = true;
-        $json = json_encode($args);
+        $json = Json::encode($args);
 
         print $json;
         $this->terminate(1);
