@@ -1,3 +1,5 @@
+[![Code Coverage](https://scrutinizer-ci.com/g/Appdynamics/ansible-php/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Appdynamics/ansible-php/?branch=develop) [![Build Status](https://scrutinizer-ci.com/g/Appdynamics/ansible-php/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/Appdynamics/ansible-php/build-status/develop)
+
 # Writing an Ansible module in PHP
 
 ## Use case
