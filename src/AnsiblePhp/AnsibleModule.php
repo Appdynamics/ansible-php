@@ -217,7 +217,8 @@ class AnsibleModule
      *
      * @return mixed PHP value.
      */
-    public function decodeJson($str, $assoc = true) {
+    public function decodeJson($str, $assoc = true)
+    {
         return Json::decode($str, $assoc);
     }
 
