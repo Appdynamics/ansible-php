@@ -35,13 +35,6 @@ class AnsibleModule
     );
 
     /**
-     * Hampel Json object instance.
-     *
-     * @var Json
-     */
-    protected $json;
-
-    /**
      * Constructor.
      *
      * @param array   $argumentSpec Argument specification. Array of arrays (dictionaries).
@@ -50,8 +43,6 @@ class AnsibleModule
     public function __construct(array $argumentSpec, $trimStrings = true)
     {
         global $argv;
-
-        $this->json = new Json();
 
         $yesNo = array('yes', 'no', 'true', 'false');
         $yes = array('yes', 'true');
@@ -197,7 +188,7 @@ class AnsibleModule
     public function exitJson(array $args = array())
     {
         $args['changed'] = isset($args['changed']) ? (bool) $args['changed'] : false;
-        $json = $this->json->encode($args);
+        $json = Json::encode($args);
 
         print $json;
         $this->terminate();
@@ -212,7 +203,7 @@ class AnsibleModule
     public function failJson(array $args = array())
     {
         $args['failed'] = true;
-        $json = $this->json->encode($args);
+        $json = Json::encode($args);
 
         print $json;
         $this->terminate(1);
@@ -226,9 +217,8 @@ class AnsibleModule
      *
      * @return mixed PHP value.
      */
-    public function decodeJson($str, $assoc = true)
-    {
-        return $this->json->decode($str, $assoc);
+    public function decodeJson($str, $assoc = true) {
+        return Json::decode($str, $assoc);
     }
 
     /**
