@@ -39,6 +39,8 @@ class AnsibleModule
      *
      * @param array   $argumentSpec Argument specification. Array of arrays (dictionaries).
      * @param boolean $trimStrings  If all string arguments should be trimmed.
+     *
+     * @todo Implement choices.
      */
     public function __construct(array $argumentSpec, $trimStrings = true)
     {
