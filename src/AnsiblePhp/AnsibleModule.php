@@ -48,8 +48,11 @@ class AnsibleModule
 
         $yesNo = array('yes', 'no', 'true', 'false');
         $yes = array('yes', 'true');
+        $runningFromPhar = (bool) preg_match('#^phar\://#', __FILE__);
 
-        $argumentSpec['ansible_php'] = array('type' => 'directory', 'required' => true);
+        if (!$runningFromPhar) {
+            $argumentSpec['ansible_php'] = array('type' => 'directory', 'required' => true);
+        }
 
         foreach ($argumentSpec as $key => $spec) {
             if (!is_array($spec)) {
@@ -65,7 +68,7 @@ class AnsibleModule
         $values = preg_split('/[a-z_\-]+=/', $argFile, null, PREG_SPLIT_NO_EMPTY);
 
         if (count($args) !== count($values)) {
-            throw new ValidationException('Argument count did not match value count');
+            throw new ValidationException('Argument count did not match value count. Usually this means the argument file is not the last argument.');
         }
 
         foreach ($args as $i => $key) {
